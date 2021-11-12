@@ -38,7 +38,7 @@ public class MeetingScheduler {
                 parseInt(officeHoursTokens[1].substring(2, 4)));
 
 
-        Map<LocalDate, SortedSet<Meeting>> meetings = new TreeMap<>();
+        Map<LocalDate, Set<Meeting>> meetings = new TreeMap<>();
         // i should starts from 2 not 1, since 2 is referred to the request meetingstarttime, with i = i+2
         for(int i=2;i<requestLines.length;i=i+2){
 
@@ -54,17 +54,21 @@ public class MeetingScheduler {
             //below is original
             //Meeting meeting = extractMeeting(requestLines[i+1], officeStartTime, officeFinishTime, meetingSlotRequest);
             Meeting meeting = extractMeeting(requestLines[0+i-1], officeStartTime, officeFinishTime, meetingSlotRequest);
-            if(meeting!= null){meeting.setRecordSubmittedTime(submittedTime);}
+            //if(meeting!= null){meeting.setRecordSubmittedTime(submittedTime);}
             //correspond to ine 47-50, set meeting.submittime
 //            if(i>=2){
 //                meeting.setRecordSubmittedTime(submittedTime);
 //            }
             SortedSet<Meeting> meetingsForDay = new TreeSet<>();
+
             if(meetings.containsKey(meetingDate)){
-            //want to compare time for each meeting
-                meetings.get(meetingDate).remove(meeting);
-                meetings.get(meetingDate).add(meeting);
-            }else {
+                if (meeting != null) {
+                    //want to compare time for each meeting
+                    meetings.get(meetingDate).remove(meeting);
+                    meetings.get(meetingDate).add(meeting);
+                }
+            }
+            else {
                 //Set<Meeting> meetingsForDay = new HashSet<Meeting>();
                 //I added if meeting is not null to make we add exact existed meeting
                 if (meeting != null) {
